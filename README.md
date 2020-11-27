@@ -1,1 +1,1 @@
-# Practica06
+# Práctica 06
