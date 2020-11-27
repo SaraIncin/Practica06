@@ -57,6 +57,7 @@ prod PRODUCTIONS[] = {
     {15, "3", 1},
 };
 
+
 int ANALYSIS_TABLE[NUM_NON_TERM][NUM_TERM] = {
     {0, -1, 0, 0, -1, -1, -1, -1, -1},
     {-1, 2, -1, -1, 2, 1, -1, -1, -1},
