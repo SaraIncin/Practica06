@@ -1,22 +1,22 @@
 %{
- #inclide <stdio.h>
- #inclide "classes.h"
+ #include <stdio.h>
+ #include "classes.h"
 
  int linea = 1;
 %}
 
 %%
 
-"a" {fprintf(yyout, "%d", A);}
-"b" {fprintf(yyout, "%d", B);}
+"a" {printf("%s",yytext);fprintf(yyout, "%d", A);}
+"b" {printf("%s",yytext);fprintf(yyout, "%d", B);}
 "v" {fprintf(yyout, "%d", OR);}
-"*" {fprintf(yyout, "%d", CLOSURE);}
+"*" {printf("%s",yytext);fprintf(yyout, "%d", CLOSURE);}
 "+" {fprintf(yyout, "%d", POSITIVE_C);}
 "?" {fprintf(yyout, "%d", OPTION);}
-"(" {fprintf(yyout, "%d", L_PAR);}
-")" {fprintf(yyout, "%d", R_PAR);}
+"(" {printf("%s",yytext); fprintf(yyout, "%d", L_PAR);}
+")" {printf("%s",yytext);fprintf(yyout, "%d", R_PAR);}
 
-<<EOF>> {fprintf(yyout, "%d", EOF);}
+<<EOF>> {fprintf(yyout, "%d", EoF);yyterminate();}
 
 . {printf("Error: %s Linea: %d\n", yytext, linea); yyterminate();}
 
