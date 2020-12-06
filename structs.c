@@ -31,6 +31,7 @@ struct _stack
     node *last;
 };
 
-bool compareSym(sym a, sym b){
+bool compareSym(sym a, sym b)
+{
     return (a.type == b.type && strcmp(a.name, b.name)==0 && a.pos == b.pos);
 }

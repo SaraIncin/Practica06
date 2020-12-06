@@ -10,8 +10,6 @@
 #define NUM_TERM 9
 #define NUM_NON_TERM 7
 
-
-
 sym NUT[] = {
     {TERM, "(", 0}, //0
     {TERM, ")", 1}, //1
@@ -47,7 +45,6 @@ prod PRODUCTIONS[] = {
     {15, "2", 1}, // 12 G -> a
     {15, "3", 1}, // 13 G -> b
 };
-
 
 int ANALYSIS_TABLE[NUM_NON_TERM][NUM_TERM] = {
     {0, -1, 0, 0, -1, -1, -1, -1, -1},
@@ -120,7 +117,14 @@ int split (char *str, char c, char ***arr)
     return count;
 }
 
-bool parse(char* w){
+/*
+ * Para ver más detalladamente el proceso puede descomentar
+ * los printf comentados.
+ * returns: un valor booleano; 0 si la cadena es rechazada y 
+ *          1 si es aceptada.
+ */
+bool parse(char* w)
+{
   stack *stack = newStack();
   push(stack, &NUT[4]);
   push(stack, &NUT[9]);
@@ -128,71 +132,92 @@ bool parse(char* w){
   int m=0;
   sym ip = NUT[(int)w[m]-'0'];  
   sym elem = top(stack);
-  while(strcmp(elem.name, "$") != 0){
-    if(compareSym(elem,ip)){
+  
+  while(strcmp(elem.name, "$") != 0)
+  {
+    if(compareSym(elem,ip))
+    {
         pop(stack);
         m++;
         ip = NUT[(int)w[m]-'0'];
-        printf("Avanzar con %s\n",ip.name);
-    } else if (elem.type == TERM){
+        //printf("Avanzar con %s\n",ip.name);
+    }
+    else if (elem.type == TERM)
+    {
         return false;
-    } else if (ANALYSIS_TABLE[elem.pos][ip.pos] != -1){
+    }
+    else if (ANALYSIS_TABLE[elem.pos][ip.pos] != -1)
+    {
         int p =  ANALYSIS_TABLE[elem.pos][ip.pos];
         prod production = PRODUCTIONS[p];
-        printf("Produccion: %s\n", production.body);
+        //printf("Produccion: %s\n", production.body);
         pop(stack);
 
         int c = 0;
         char **arr = NULL;
 
         c = split(production.body, '/', &arr);
-        for (i = c-1; i >= 0; i--){
+        for (i = c-1; i >= 0; i--)
+	{
             int pos = atoi(arr[i]);
-            printf("el simbolo es:%d\n ", pos);
-            if(pos != -1){
+            //printf("el simbolo es:%d\n ", pos);
+	    
+            if(pos != -1)
+	    {
                  push(stack, &NUT[pos]);
             }
-
         }
-
-    } else if (ANALYSIS_TABLE[elem.pos][ip.pos] == -1){
-        printf("elem%s\n",elem.name);
-        printf("ip%s\n",ip.name);
-        printf("no prod");
-        return false;
-
     }
+    else if (ANALYSIS_TABLE[elem.pos][ip.pos] == -1)
+    {
+      //printf("elem%s\n",elem.name);
+      //printf("ip%s\n",ip.name);
+      //printf("no prod");
+        return false;
+    }
+    
     elem = top(stack);
-    printf("Tope pila%s\n",elem.name);
+    //printf("Tope pila: %s\n",elem.name);
   }
+  
   return true;
 }
 
-int check_ext(char *s, const char *ext) {
+int check_ext(char *s, const char *ext)
+{
   char *e = strrchr(s, '.');
-  if(!e || strcmp(e+1, ext)) {
+  
+  if(!e || strcmp(e+1, ext))
+  {
     printf("Extension del archivo debe ser .%s\n", ext);
     return -1;
   }
+  
   return 0;
 }
 
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     FILE *fp;
     char linea[1024];
-    if(argc < 2) {
+    
+    if(argc < 2)
+    {
         puts("Se necestian un archivo de entrada");
         return -1;
     }
+    
     if(check_ext(argv[1], "tokens")==-1) return -1;
 
     fp = fopen(argv[1], "r");
 
-    while(fgets(linea, 1024, (FILE*) fp)){
-        printf("%s\n",linea);
-        printf("%d",parse(linea));
+    while(fgets(linea, 1024, (FILE*) fp))
+    {
+      //printf("%s\n",linea);
+        printf("%d\n",parse(linea));
     }
+    
     fclose(fp);
+    
     return 0;
 }
